@@ -1,56 +1,96 @@
 package com.example.funkidslearnsapp.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
 fun GameMenuScreen(
     onStartGame: (String) -> Unit,
     onSettings: () -> Unit
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color(0xFFFFF9C4), Color(0xFFB3E5FC))
+                )
+            )
     ) {
 
-        Text(
-            "GAME MENU",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
 
-        Spacer(Modifier.height(40.dp))
+            Text(
+                text = "GAME MENU",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF0288D1)
+            )
 
-        Button(onClick = { onStartGame("letters") }) {
-            Text("Letters")
-        }
+            Spacer(Modifier.height(40.dp))
 
-        Spacer(Modifier.height(20.dp))
+            Button(
+                onClick = { onStartGame("letters") },
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+            ) {
+                Text("LETTERS", fontSize = 20.sp)
+            }
 
-        Button(onClick = { onStartGame("numbers") }) {
-            Text("Numbers")
-        }
+            Spacer(Modifier.height(20.dp))
 
-        Spacer(Modifier.height(20.dp))
+            Button(
+                onClick = { onStartGame("numbers") },
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+            ) {
+                Text("NUMBERS", fontSize = 20.sp)
+            }
 
-        Button(onClick = { onStartGame("shapes") }) {
-            Text("Shapes")
-        }
+            Spacer(Modifier.height(20.dp))
 
-        Spacer(Modifier.height(30.dp))
+            Button(
+                onClick = { onStartGame("shapes") },
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+            ) {
+                Text("SHAPES", fontSize = 20.sp)
+            }
 
-        Button(onClick = onSettings) {
-            Text("Settings")
+            Spacer(Modifier.height(30.dp))
+
+            Button(
+                onClick = onSettings,
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+            ) {
+                Text("SETTINGS", fontSize = 18.sp)
+            }
         }
     }
 }

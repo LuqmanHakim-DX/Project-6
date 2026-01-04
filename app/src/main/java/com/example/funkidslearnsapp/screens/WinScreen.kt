@@ -1,11 +1,13 @@
 package com.example.funkidslearnsapp.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,20 +19,30 @@ fun WinScreen(
     onBackToMenu: () -> Unit
 ) {
     Box(
-        Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color(0xFFB2FF59), Color(0xFF81D4FA))
+                )
+            )
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
 
-            Text("YOU WIN!",
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF4CAF50)
+            Text(
+                "YOU WIN! 🎉",
+                fontSize = 42.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF2E7D32)
             )
 
             Spacer(Modifier.height(30.dp))
 
-            Button(onClick = onBackToMenu ) {
+            Button(onClick = onBackToMenu) {
                 Text("Back to Menu")
             }
         }
