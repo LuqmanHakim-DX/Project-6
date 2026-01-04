@@ -1,4 +1,4 @@
-package com.example.funlearn.ui.screens
+package com.example.funkidslearnsapp.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button

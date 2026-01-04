@@ -1,24 +1,50 @@
-package com.example.funlearn.ui.screens
+package com.example.funkidslearnsapp.screens
 
+
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.funkidslearnsapp.FunLearnTheme
+import com.example.funkidslearnsapp.Routes
 
 @Composable
-fun StartUpScreen(onContinue: () -> Unit) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+fun StartupScreen(
+    onContinue: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFEDE7FF)),
+        contentAlignment = Alignment.Center
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("HELLO FRIEND!", modifier = Modifier.padding(8.dp))
-            Spacer(Modifier.height(16.dp))
-            Text("Welcome to FunLearn")
-            Spacer(Modifier.height(24.dp))
-            Button(onClick = onContinue) {
-                Text("Continue")
+            Text(
+                "HELLO FRIEND!",
+                fontSize = 34.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(Modifier.height(40.dp))
+
+            Button(onClick = onContinue ) {
+                Text("START")
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StartupScreenPreview() {
+    FunLearnTheme {
+        StartupScreen(onContinue = {})
     }
 }
