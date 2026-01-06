@@ -24,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import android.app.Activity
+import com.example.funkidslearnsapp.screens.NumberQuizScreen
 
 @Composable
 fun FunLearnApp() {
@@ -35,6 +36,7 @@ fun FunLearnApp() {
     BackHandler {
         showExitDialog = true
     }
+
 
     NavHost(
         navController = navController,
@@ -52,7 +54,10 @@ fun FunLearnApp() {
         composable(Routes.GameMenu) {
             GameMenuScreen(
                 onStartGame = { gameId ->
-                    navController.navigate("${Routes.Gameplay}/$gameId")
+                    when (gameId) {
+                        "numbers" -> navController.navigate(Routes.NumberQuiz)
+                        else -> navController.navigate("${Routes.Gameplay}/$gameId")
+                    }
                 },
                 onSettings = {
                     navController.navigate(Routes.Settings)
@@ -102,6 +107,13 @@ fun FunLearnApp() {
             PauseScreen(
                 onResume = { navController.popBackStack() },
                 onQuit = { navController.navigate(Routes.GameMenu) }
+            )
+        }
+
+        composable(Routes.NumberQuiz) {
+            NumberQuizScreen(
+                onWin = { navController.navigate(Routes.Win) },
+                onLose = { navController.navigate(Routes.Lose) }
             )
         }
 

@@ -11,4 +11,5 @@ object Routes {
     const val Letters = "letters"
     const val Numbers = "numbers"
     const val Shapes = "shapes"
+    const val NumberQuiz = "number_quiz"
 }
