@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.funkidslearnsapp.FunLearnTheme
 import com.example.funkidslearnsapp.Routes
+import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
 @Composable
 fun StartupScreen(
@@ -56,10 +58,10 @@ fun StartupScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
 fun StartupScreenPreview() {
-    FunLearnTheme {
+    FunKidsLearnsAppTheme {
         StartupScreen(onContinue = {})
     }
 }
