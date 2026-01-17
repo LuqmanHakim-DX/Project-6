@@ -25,6 +25,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import android.app.Activity
 import com.example.funkidslearnsapp.screens.NumberQuizScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+
 
 @Composable
 fun FunLearnApp() {
@@ -32,6 +35,7 @@ fun FunLearnApp() {
 
     val context = LocalContext.current
     var showExitDialog by remember { mutableStateOf(false) }
+
 
     BackHandler {
         showExitDialog = true
@@ -43,13 +47,17 @@ fun FunLearnApp() {
         startDestination = Routes.StartUp
     ) {
 
+
         composable(Routes.StartUp) {
             StartupScreen(
                 onContinue = {
-                    navController.navigate(Routes.GameMenu)
+                    navController.navigate(Routes.GameMenu) {
+                        popUpTo(Routes.StartUp) { inclusive = true }
+                    }
                 }
             )
         }
+
 
         composable(Routes.GameMenu) {
             GameMenuScreen(
