@@ -14,34 +14,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.funkidslearnsapp.game.LetterGameData
 import com.example.funkidslearnsapp.game.generateLetterOptions
 import com.example.funkidslearnsapp.game.maskedWord
-import com.example.funkidslearnsapp.FunLearnTheme
-import kotlinx.coroutines.delay
+import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
 @Composable
 fun LetterGameScreen(
-    onBackToMenu: () -> Unit
+    onWin: () -> Unit,
+    onLose: () -> Unit,
+    onPause: () -> Unit
 ) {
-    
     var currentIndex by remember { mutableStateOf(0) }
     val game = LetterGameData.games[currentIndex]
 
     val correctLetter = game.word[game.missingIndex]
-
     var options by remember { mutableStateOf(generateLetterOptions(correctLetter)) }
-    var resultText by remember { mutableStateOf("") }
 
     LaunchedEffect(currentIndex) {
         options = generateLetterOptions(correctLetter)
-        resultText = ""
     }
 
-    Button(
-        onClick = onBackToMenu,
-        modifier = Modifier.padding(bottom = 16.dp)
-    ) {
-        Text("Back")
-    }
-    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,6 +39,13 @@ fun LetterGameScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
+        // ⏸ Pause
+        Button(onClick = onPause) {
+            Text("PAUSE")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Image(
             painter = painterResource(id = game.imageRes),
@@ -71,9 +68,9 @@ fun LetterGameScreen(
                     Button(
                         onClick = {
                             if (letter == correctLetter) {
-                                resultText = "Correct 🎉"
+                                onWin()
                             } else {
-                                resultText = "Try again ❌"
+                                onLose()
                             }
                         },
                         modifier = Modifier
@@ -85,27 +82,17 @@ fun LetterGameScreen(
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(text = resultText, fontSize = 20.sp)
-    }
-
-    // 👉 Auto move to next word
-    LaunchedEffect(resultText) {
-        if (resultText == "Correct 🎉") {
-            delay(1000)
-            currentIndex = (currentIndex + 1) % LetterGameData.games.size
-        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LetterGameScreenPreview() {
-    FunLearnTheme {
+    FunKidsLearnsAppTheme {
         LetterGameScreen(
-            onBackToMenu = TODO()
+            onWin = {},
+            onLose = {},
+            onPause = {}
         )
     }
 }

@@ -73,13 +73,13 @@ fun GameMenuScreen(
             Spacer(Modifier.height(20.dp))
 
             Button(
-                onClick = { onStartGame("shapes") },
+                onClick = { onStartGame("colors") },
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
             ) {
-                Text("SHAPES", fontSize = 20.sp)
+                Text("COLORS", fontSize = 20.sp)
             }
 
             Spacer(Modifier.height(30.dp))
