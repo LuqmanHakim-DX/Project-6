@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.funkidslearnsapp.screens.GameMenuScreen
-import com.example.funkidslearnsapp.screens.GameplayScreen
 import com.example.funkidslearnsapp.screens.LoseScreen
 import com.example.funkidslearnsapp.screens.PauseScreen
 import com.example.funkidslearnsapp.screens.SettingsScreen
@@ -25,47 +24,38 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import android.app.Activity
 import com.example.funkidslearnsapp.screens.NumberQuizScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
-
+import com.example.funkidslearnsapp.screens.ColorGameScreen
+import com.example.funkidslearnsapp.screens.LetterGameScreen
 
 
 @Composable
 fun FunLearnApp() {
-    val navController = rememberNavController()
 
+    val navController = rememberNavController()
     val context = LocalContext.current
     var showExitDialog by remember { mutableStateOf(false) }
-
 
     BackHandler {
         showExitDialog = true
     }
-
 
     NavHost(
         navController = navController,
         startDestination = Routes.StartUp
     ) {
 
-
         composable(Routes.StartUp) {
-            StartupScreen(
-                onContinue = {
-                    navController.navigate(Routes.GameMenu) {
-                        popUpTo(Routes.StartUp) { inclusive = true }
-                    }
+            StartupScreen {
+                navController.navigate(Routes.GameMenu) {
+                    popUpTo(Routes.StartUp) { inclusive = true }
                 }
-            )
+            }
         }
-
 
         composable(Routes.GameMenu) {
             GameMenuScreen(
-                onStartGame = { gameId ->
-                    when (gameId) {
-                        "numbers" -> navController.navigate(Routes.NumberQuiz)
-                        else -> navController.navigate("${Routes.Gameplay}/$gameId")
-                    }
+                onStartGame = { route ->
+                    navController.navigate(route)
                 },
                 onSettings = {
                     navController.navigate(Routes.Settings)
@@ -73,68 +63,59 @@ fun FunLearnApp() {
             )
         }
 
-        composable(
-            route = "${Routes.Gameplay}/{gameId}",
-            arguments = listOf(navArgument("gameId") { type = NavType.StringType })
-        ) { backStackEntry ->
 
-            val gameId = backStackEntry.arguments?.getString("gameId") ?: "1"
+        // 🔤 LETTER GAME
+        composable(Routes.LETTER_GAME) {
+            LetterGameScreen(
 
-            GameplayScreen(
-                gameId = gameId,
-                onWin = { navController.navigate(Routes.Win) },
+                onLose = { navController.navigate(Routes.Lose) },
+                onPause = { navController.navigate(Routes.Pause) }
+            )
+        }
+
+        // 🎨 COLOR GAME
+        composable(Routes.COLOR_GAME) {
+            ColorGameScreen(
+
+                onLose = { navController.navigate(Routes.Lose) },
+                onPause = { navController.navigate(Routes.Pause) }
+            )
+        }
+
+        // 🔢 NUMBER GAME
+        composable(Routes.NumberQuiz) {
+            NumberQuizScreen(
+
                 onLose = { navController.navigate(Routes.Lose) },
                 onPause = { navController.navigate(Routes.Pause) }
             )
         }
 
         composable(Routes.Win) {
-            WinScreen(
-                onBackToMenu = {
-                    navController.popBackStack(Routes.GameMenu, false)
-                }
-            )
+            WinScreen {
+                navController.popBackStack(Routes.GameMenu, false)
+            }
         }
 
         composable(Routes.Lose) {
-            LoseScreen(
-                onRetry = {
-                    navController.popBackStack()
-                    navController.navigate(Routes.GameMenu)
-                }
-            )
-        }
-
-        composable(Routes.Settings) {
-            SettingsScreen(
-                onBack = { navController.popBackStack() }
-            )
+            LoseScreen {
+                navController.popBackStack(Routes.GameMenu, false)
+            }
         }
 
         composable(Routes.Pause) {
             PauseScreen(
                 onResume = { navController.popBackStack() },
-                onQuit = { navController.navigate(Routes.GameMenu) }
+                onQuit = {
+                    navController.popBackStack(Routes.GameMenu, false)
+                }
             )
         }
 
-        composable(Routes.NumberQuiz) {
-            NumberQuizScreen(
-                onWin = { navController.navigate(Routes.Win) },
-                onLose = { navController.navigate(Routes.Lose) }
-            )
-        }
-
-        composable(Routes.Letters) {
-            LettersScreen(onBack = { navController.popBackStack() })
-        }
-
-        composable(Routes.Numbers) {
-            NumbersScreen(onBack = { navController.popBackStack() })
-        }
-
-        composable(Routes.Shapes) {
-            ShapesScreen(onBack = { navController.popBackStack() })
+        composable(Routes.Settings) {
+            SettingsScreen {
+                navController.popBackStack()
+            }
         }
     }
 
@@ -154,36 +135,5 @@ fun FunLearnApp() {
                 }
             }
         )
-    }
-}
-
-
-@Composable
-fun LettersScreen(onBack: () -> Unit) {
-    SimpleScreen("Letters Game", onBack)
-}
-
-@Composable
-fun NumbersScreen(onBack: () -> Unit) {
-    SimpleScreen("Numbers Game", onBack)
-}
-
-@Composable
-fun ShapesScreen(onBack: () -> Unit) {
-    SimpleScreen("Shapes Game", onBack)
-}
-
-@Composable
-fun SimpleScreen(title: String, onBack: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(title, style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(onClick = onBack) {
-            Text("Back")
-        }
     }
 }

@@ -18,13 +18,22 @@ import kotlin.random.Random
 
 @Composable
 fun NumberQuizScreen(
-    onWin: () -> Unit,
-    onLose: () -> Unit
+    onLose: () -> Unit,
+    onPause: () -> Unit
 ) {
-    var a by remember { mutableStateOf(Random.nextInt(1, 10)) }
-    var b by remember { mutableStateOf(Random.nextInt(1, 10)) }
-    val answer = a + b
+    var a by remember { mutableStateOf(0) }
+    var b by remember { mutableStateOf(0) }
 
+    fun generateQuestion() {
+        a = Random.nextInt(1, 10)
+        b = Random.nextInt(1, 10)
+    }
+
+    LaunchedEffect(Unit) {
+        generateQuestion()
+    }
+
+    val answer = a + b
     val options = remember(answer) {
         listOf(
             answer,
@@ -34,53 +43,46 @@ fun NumberQuizScreen(
         ).shuffled()
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(listOf(Color(0xFFFFF9C4), Color(0xFFB3E5FC)))
-            )
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
 
-            Text("What is:", fontSize = 24.sp)
-            Spacer(Modifier.height(8.dp))
+        Button(onClick = onPause) { Text("PAUSE") }
 
-            Text(
-                "$a + $b = ?",
-                fontSize = 42.sp,
-                fontWeight = FontWeight.Bold
-            )
+        Spacer(Modifier.height(16.dp))
 
-            Spacer(Modifier.height(32.dp))
+        Text("$a + $b = ?", fontSize = 40.sp)
 
-            options.forEach { option ->
-                Button(
-                    onClick = {
-                        if (option == answer) onWin()
-                        else onLose()
-                    },
-                    shape = RoundedCornerShape(24.dp),
-                    modifier = Modifier
-                        .fillMaxWidth(0.7f)
-                        .height(60.dp)
-                        .padding(6.dp)
-                ) {
-                    Text(option.toString(), fontSize = 20.sp)
-                }
+        Spacer(Modifier.height(24.dp))
+
+        options.forEach { option ->
+            Button(
+                onClick = {
+                    if (option == answer) {
+                        generateQuestion()
+                    } else {
+                        onLose()
+                    }
+                },
+                modifier = Modifier.padding(6.dp)
+            ) {
+                Text(option.toString(), fontSize = 20.sp)
             }
         }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun NumberQuizPreview() {
     FunKidsLearnsAppTheme {
-        NumberQuizScreen(onWin = {}, onLose = {})
+        NumberQuizScreen(
+
+            onLose = {},
+            onPause = {}
+        )
     }
 }

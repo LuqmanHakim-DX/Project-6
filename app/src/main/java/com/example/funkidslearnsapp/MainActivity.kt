@@ -16,6 +16,7 @@ import com.example.funkidslearnsapp.screens.WinScreen
 import com.example.funkidslearnsapp.screens.LoseScreen
 import com.example.funkidslearnsapp.screens.PauseScreen
 import com.example.funkidslearnsapp.screens.ColorGameScreen
+import com.example.funkidslearnsapp.screens.NumberQuizScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -49,6 +50,7 @@ class MainActivity : ComponentActivity() {
                                 when (gameType) {
                                     "letters" -> navController.navigate(Routes.LETTER_GAME)
                                     "colors" -> navController.navigate(Routes.COLOR_GAME)
+                                    "numbers" -> navController.navigate(Routes.NumberQuiz)
                                 }
                             },
                             onSettings = {
@@ -60,7 +62,16 @@ class MainActivity : ComponentActivity() {
                     // 🔹 Letter Game
                     composable(Routes.LETTER_GAME) {
                         LetterGameScreen(
-                            onWin = { navController.navigate(Routes.Win) },
+
+                            onLose = { navController.navigate(Routes.Lose) },
+                            onPause = { navController.navigate(Routes.Pause) }
+                        )
+                    }
+
+                    // 🔹 Number Game
+                    composable(Routes.NumberQuiz) {
+                        NumberQuizScreen(
+
                             onLose = { navController.navigate(Routes.Lose) },
                             onPause = { navController.navigate(Routes.Pause) }
                         )
@@ -69,7 +80,7 @@ class MainActivity : ComponentActivity() {
                     // 🔹 Color Game
                     composable(Routes.COLOR_GAME) {
                         ColorGameScreen(
-                            onWin = { navController.navigate(Routes.Win) },
+
                             onLose = { navController.navigate(Routes.Lose) },
                             onPause = { navController.navigate(Routes.Pause) }
                         )

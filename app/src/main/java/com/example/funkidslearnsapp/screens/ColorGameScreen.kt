@@ -20,11 +20,12 @@ import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
 @Composable
 fun ColorGameScreen(
-    onWin: () -> Unit,
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
-    val game = ColorGameData.games[0]
+    var currentIndex by remember { mutableStateOf(0) }
+    val games = remember { ColorGameData.games.shuffled() }
+    val game = games[currentIndex]
 
     Column(
         modifier = Modifier
@@ -33,9 +34,14 @@ fun ColorGameScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(modifier = Modifier.height(40.dp))
+        // ⏸ Pause
+        Button(onClick = onPause) {
+            Text("PAUSE")
+        }
 
-        // 🟨 Question card
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Question card
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -51,8 +57,7 @@ fun ColorGameScreen(
                 Text(
                     text = game.question,
                     fontSize = 22.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.Black
+                    fontWeight = FontWeight.ExtraBold
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -70,43 +75,31 @@ fun ColorGameScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // 🎯 Answer buttons
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
+        // 🎯 Answer buttons (2x2)
+        game.options.chunked(2).forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                ColorAnswerButton(game.options[0]) {
-                    if (game.options[0] == game.correctAnswer) onWin() else onLose()
-                }
-                ColorAnswerButton(game.options[1]) {
-                    if (game.options[1] == game.correctAnswer) onWin() else onLose()
+                row.forEach { option ->
+                    ColorAnswerButton(
+                        text = option,
+                        onClick = {
+                            if (option == game.correctAnswer) {
+                                currentIndex =
+                                    (currentIndex + 1) % ColorGameData.games.size
+                            } else {
+                                onLose()
+                            }
+                        }
+                    )
                 }
             }
-
             Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                ColorAnswerButton(game.options[2]) {
-                    if (game.options[2] == game.correctAnswer) onWin() else onLose()
-                }
-                ColorAnswerButton(game.options[3]) {
-                    if (game.options[3] == game.correctAnswer) onWin() else onLose()
-                }
-            }
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            Button(onClick = onPause) {
-                Text("PAUSE")
-            }
         }
     }
 }
+
 
 @Composable
 fun ColorAnswerButton(
@@ -137,7 +130,7 @@ fun ColorAnswerButton(
 fun ColorGamePreview() {
     FunKidsLearnsAppTheme {
         ColorGameScreen(
-            onWin = {},
+
             onLose = {},
             onPause = {}
         )

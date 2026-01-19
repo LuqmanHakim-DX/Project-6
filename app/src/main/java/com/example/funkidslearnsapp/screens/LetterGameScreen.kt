@@ -18,7 +18,6 @@ import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
 @Composable
 fun LetterGameScreen(
-    onWin: () -> Unit,
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
@@ -33,34 +32,26 @@ fun LetterGameScreen(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
 
-        // ⏸ Pause
-        Button(onClick = onPause) {
-            Text("PAUSE")
-        }
+        Button(onClick = onPause) { Text("PAUSE") }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         Image(
-            painter = painterResource(id = game.imageRes),
+            painter = painterResource(game.imageRes),
             contentDescription = null,
             modifier = Modifier.size(200.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(Modifier.height(24.dp))
 
-        Text(
-            text = maskedWord(game.word, game.missingIndex),
-            fontSize = 40.sp
-        )
+        Text(maskedWord(game.word, game.missingIndex), fontSize = 40.sp)
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(Modifier.height(24.dp))
 
         options.chunked(2).forEach { row ->
             Row {
@@ -68,14 +59,13 @@ fun LetterGameScreen(
                     Button(
                         onClick = {
                             if (letter == correctLetter) {
-                                onWin()
+                                currentIndex =
+                                    (currentIndex + 1) % LetterGameData.games.size
                             } else {
                                 onLose()
                             }
                         },
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .size(80.dp)
+                        modifier = Modifier.padding(8.dp).size(80.dp)
                     ) {
                         Text(letter.toString(), fontSize = 24.sp)
                     }
@@ -85,12 +75,13 @@ fun LetterGameScreen(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun LetterGameScreenPreview() {
     FunKidsLearnsAppTheme {
         LetterGameScreen(
-            onWin = {},
+
             onLose = {},
             onPause = {}
         )
