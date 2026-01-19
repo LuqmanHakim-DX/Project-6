@@ -20,11 +20,15 @@ import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
 @Composable
 fun ColorGameScreen(
+    onWin: () -> Unit,
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
-    var currentIndex by remember { mutableStateOf(0) }
     val games = remember { ColorGameData.games.shuffled() }
+
+    var currentIndex by remember { mutableStateOf(0) }
+    var score by remember { mutableStateOf(0) }
+
     val game = games[currentIndex]
 
     Column(
@@ -34,9 +38,13 @@ fun ColorGameScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // ⏸ Pause
-        Button(onClick = onPause) {
-            Text("PAUSE")
+        // 🔢 SCORE + PAUSE
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Score: $score", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Button(onClick = onPause) { Text("PAUSE") }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -86,8 +94,13 @@ fun ColorGameScreen(
                         text = option,
                         onClick = {
                             if (option == game.correctAnswer) {
-                                currentIndex =
-                                    (currentIndex + 1) % ColorGameData.games.size
+                                score++
+
+                                if (currentIndex == games.lastIndex) {
+                                    onWin()
+                                } else {
+                                    currentIndex++
+                                }
                             } else {
                                 onLose()
                             }
@@ -99,6 +112,7 @@ fun ColorGameScreen(
         }
     }
 }
+
 
 
 @Composable
@@ -130,7 +144,7 @@ fun ColorAnswerButton(
 fun ColorGamePreview() {
     FunKidsLearnsAppTheme {
         ColorGameScreen(
-
+            onWin = {},
             onLose = {},
             onPause = {}
         )

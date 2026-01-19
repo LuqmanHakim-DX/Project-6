@@ -67,7 +67,7 @@ fun FunLearnApp() {
         // 🔤 LETTER GAME
         composable(Routes.LETTER_GAME) {
             LetterGameScreen(
-
+                onWin = { navController.navigate(Routes.Win) },
                 onLose = { navController.navigate(Routes.Lose) },
                 onPause = { navController.navigate(Routes.Pause) }
             )
@@ -76,7 +76,7 @@ fun FunLearnApp() {
         // 🎨 COLOR GAME
         composable(Routes.COLOR_GAME) {
             ColorGameScreen(
-
+                onWin = { navController.navigate(Routes.Win) },
                 onLose = { navController.navigate(Routes.Lose) },
                 onPause = { navController.navigate(Routes.Pause) }
             )
@@ -85,7 +85,7 @@ fun FunLearnApp() {
         // 🔢 NUMBER GAME
         composable(Routes.NumberQuiz) {
             NumberQuizScreen(
-
+                onWin = { navController.navigate(Routes.Win) },
                 onLose = { navController.navigate(Routes.Lose) },
                 onPause = { navController.navigate(Routes.Pause) }
             )

@@ -18,18 +18,18 @@ import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
 @Composable
 fun LetterGameScreen(
+    onWin: () -> Unit,
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
+    val games = remember { LetterGameData.games.shuffled() }
+
     var currentIndex by remember { mutableStateOf(0) }
-    val game = LetterGameData.games[currentIndex]
+    var score by remember { mutableStateOf(0) }
 
+    val game = games[currentIndex]
     val correctLetter = game.word[game.missingIndex]
-    var options by remember { mutableStateOf(generateLetterOptions(correctLetter)) }
-
-    LaunchedEffect(currentIndex) {
-        options = generateLetterOptions(correctLetter)
-    }
+    val options = remember(game) { generateLetterOptions(correctLetter) }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -37,7 +37,14 @@ fun LetterGameScreen(
         verticalArrangement = Arrangement.Center
     ) {
 
-        Button(onClick = onPause) { Text("PAUSE") }
+        // 🔢 SCORE + PAUSE
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Score: $score", fontSize = 20.sp)
+            Button(onClick = onPause) { Text("PAUSE") }
+        }
 
         Spacer(Modifier.height(16.dp))
 
@@ -59,8 +66,9 @@ fun LetterGameScreen(
                     Button(
                         onClick = {
                             if (letter == correctLetter) {
-                                currentIndex =
-                                    (currentIndex + 1) % LetterGameData.games.size
+                                score++
+                                if (currentIndex == games.lastIndex) onWin()
+                                else currentIndex++
                             } else {
                                 onLose()
                             }
@@ -81,7 +89,7 @@ fun LetterGameScreen(
 fun LetterGameScreenPreview() {
     FunKidsLearnsAppTheme {
         LetterGameScreen(
-
+            onWin = {},
             onLose = {},
             onPause = {}
         )

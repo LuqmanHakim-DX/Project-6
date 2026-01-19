@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     // 🔹 Letter Game
                     composable(Routes.LETTER_GAME) {
                         LetterGameScreen(
-
+                            onWin = { navController.navigate(Routes.Win) },
                             onLose = { navController.navigate(Routes.Lose) },
                             onPause = { navController.navigate(Routes.Pause) }
                         )
@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     // 🔹 Number Game
                     composable(Routes.NumberQuiz) {
                         NumberQuizScreen(
-
+                            onWin = { navController.navigate(Routes.Win) },
                             onLose = { navController.navigate(Routes.Lose) },
                             onPause = { navController.navigate(Routes.Pause) }
                         )
@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                     // 🔹 Color Game
                     composable(Routes.COLOR_GAME) {
                         ColorGameScreen(
-
+                            onWin = { navController.navigate(Routes.Win) },
                             onLose = { navController.navigate(Routes.Lose) },
                             onPause = { navController.navigate(Routes.Pause) }
                         )
