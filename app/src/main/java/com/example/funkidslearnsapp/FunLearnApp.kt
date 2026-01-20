@@ -24,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import android.app.Activity
 import com.example.funkidslearnsapp.data.HighScoreManager
+import com.example.funkidslearnsapp.firebase.FirebaseAuthHelper
 import com.example.funkidslearnsapp.screens.NumberQuizScreen
 import com.example.funkidslearnsapp.screens.ColorGameScreen
 import com.example.funkidslearnsapp.screens.LeaderboardScreen
@@ -37,10 +38,15 @@ fun FunLearnApp() {
     val context = LocalContext.current
     var showExitDialog by remember { mutableStateOf(false) }
 
+    val startDestination = if (FirebaseAuthHelper.getCurrentUser() != null) {
+        Routes.GameMenu
+    } else {
+        Routes.StartUp
+    }
 
     NavHost(
         navController = navController,
-        startDestination = Routes.StartUp
+        startDestination = startDestination
     ) {
 
         composable(Routes.StartUp) {

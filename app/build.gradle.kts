@@ -68,6 +68,11 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.coroutines.playservices)
 
+    // Google Sign-In
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
+
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
