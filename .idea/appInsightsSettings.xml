@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.funkidslearnsapp" />
+                  <option name="mobileSdkAppId" value="1:648497628197:android:8703eeb654ce15f2d96bcc" />
+                  <option name="projectId" value="funlearnapp" />
+                  <option name="projectNumber" value="648497628197" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

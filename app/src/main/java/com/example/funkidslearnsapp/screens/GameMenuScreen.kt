@@ -83,6 +83,18 @@ fun GameMenuScreen(
                 Text("COLORS", fontSize = 20.sp)
             }
 
+            Spacer(Modifier.height(20.dp))
+
+            Button(
+                onClick = { onStartGame(Routes.LEADERBOARD) },
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+            ) {
+                Text("LEADERBOARD", fontSize = 20.sp)
+            }
+
             Spacer(Modifier.height(30.dp))
 
             Button(

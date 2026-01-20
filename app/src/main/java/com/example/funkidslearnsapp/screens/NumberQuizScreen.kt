@@ -16,7 +16,7 @@ import kotlin.random.Random
 
 @Composable
 fun NumberQuizScreen(
-    onWin: () -> Unit,
+    onWin: (score: Int) -> Unit,
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
@@ -80,14 +80,7 @@ fun NumberQuizScreen(
                         score++
 
                         if (questionCount == 9) {
-                            // 🏆 SAVE HIGH SCORE
-                            scope.launch {
-                                highScoreManager.saveHighScore(
-                                    HighScoreManager.NUMBER_HIGH,
-                                    score
-                                )
-                                onWin()
-                            }
+                            onWin(score)
                         } else {
                             nextQuestion()
                         }

@@ -21,7 +21,7 @@ import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
 @Composable
 fun ColorGameScreen(
-    onWin: () -> Unit,
+    onWin: (score: Int) -> Unit,
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
@@ -91,7 +91,7 @@ fun ColorGameScreen(
                                 score++
 
                                 if (currentIndex == games.lastIndex) {
-                                    onWin()
+                                    onWin(score)
                                 } else {
                                     currentIndex++
                                     locked = false

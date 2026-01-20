@@ -1,0 +1,34 @@
+
+
+{
+  "project_info": {
+    "project_number": "648497628197",
+    "project_id": "funlearnapp",
+    "storage_bucket": "funlearnapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648497628197:android:8703eeb654ce15f2d96bcc",
+        "android_client_info": {
+          "package_name": "com.example.funkidslearnsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdzEN27ibt0atVG1nbomPXRCAAqfrg7U0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1",
+
+  "package_name": "com.example.funkidslearnsapp"
+
+}

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LetterGameScreen(
-    onWin: () -> Unit,
+    onWin: (score: Int) -> Unit,
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
@@ -83,14 +83,7 @@ fun LetterGameScreen(
                                 score++
 
                                 if (currentIndex == games.lastIndex) {
-                                    // 🏆 SAVE HIGH SCORE (CORRECT WAY)
-                                    scope.launch {
-                                        highScoreManager.saveHighScore(
-                                            HighScoreManager.LETTER_HIGH,
-                                            score
-                                        )
-                                        onWin()
-                                    }
+                                    onWin(score)
                                 } else {
                                     currentIndex++
                                     locked = false
