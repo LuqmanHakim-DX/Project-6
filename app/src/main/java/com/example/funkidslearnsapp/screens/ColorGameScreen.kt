@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.funkidslearnsapp.game.ColorGameData
+import com.example.funkidslearnsapp.game.ColorGameData.games
 import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
 @Composable
@@ -25,9 +26,11 @@ fun ColorGameScreen(
     onPause: () -> Unit
 ) {
     val games = remember { ColorGameData.games.shuffled() }
+    if (games.isEmpty()) return
 
     var currentIndex by remember { mutableStateOf(0) }
     var score by remember { mutableStateOf(0) }
+    var locked by remember { mutableStateOf(false) }
 
     val game = games[currentIndex]
 
@@ -49,41 +52,29 @@ fun ColorGameScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Question card
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    color = Color(0xFFFFD600),
-                    shape = RoundedCornerShape(20.dp)
-                )
+                .background(Color(0xFFFFD600), RoundedCornerShape(20.dp))
                 .padding(24.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                Text(
-                    text = game.question,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+                Text(game.question, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Box(
                     modifier = Modifier
                         .size(120.dp)
-                        .background(
-                            color = game.displayColor,
-                            shape = CircleShape
-                        )
+                        .background(game.displayColor, CircleShape)
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // 🎯 Answer buttons (2x2)
         game.options.chunked(2).forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -93,6 +84,9 @@ fun ColorGameScreen(
                     ColorAnswerButton(
                         text = option,
                         onClick = {
+                            if (locked) return@ColorAnswerButton
+                            locked = true
+
                             if (option == game.correctAnswer) {
                                 score++
 
@@ -100,6 +94,7 @@ fun ColorGameScreen(
                                     onWin()
                                 } else {
                                     currentIndex++
+                                    locked = false
                                 }
                             } else {
                                 onLose()
@@ -112,6 +107,7 @@ fun ColorGameScreen(
         }
     }
 }
+
 
 
 

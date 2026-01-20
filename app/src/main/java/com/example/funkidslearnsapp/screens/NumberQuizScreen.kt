@@ -1,19 +1,17 @@
 package com.example.funkidslearnsapp.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.funkidslearnsapp.data.HighScoreManager
 import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
@@ -22,26 +20,33 @@ fun NumberQuizScreen(
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
+    val context = LocalContext.current
+    val highScoreManager = remember { HighScoreManager(context) }
+    val scope = rememberCoroutineScope() // ✅ CORRECT
+
     var score by remember { mutableStateOf(0) }
     var questionCount by remember { mutableStateOf(0) }
+    var locked by remember { mutableStateOf(false) }
 
     var a by remember { mutableStateOf(Random.nextInt(1, 10)) }
     var b by remember { mutableStateOf(Random.nextInt(1, 10)) }
 
     val answer = a + b
+
     val options = remember(answer) {
         listOf(
             answer,
             answer + Random.nextInt(1, 4),
             answer - Random.nextInt(1, 4),
             Random.nextInt(1, 20)
-        ).shuffled()
+        ).distinct().shuffled()
     }
 
     fun nextQuestion() {
         a = Random.nextInt(1, 10)
         b = Random.nextInt(1, 10)
         questionCount++
+        locked = false
     }
 
     Column(
@@ -68,23 +73,37 @@ fun NumberQuizScreen(
         options.forEach { option ->
             Button(
                 onClick = {
+                    if (locked) return@Button
+                    locked = true
+
                     if (option == answer) {
                         score++
-                        if (questionCount == 9) onWin() // 10 questions
-                        else nextQuestion()
+
+                        if (questionCount == 9) {
+                            // 🏆 SAVE HIGH SCORE
+                            scope.launch {
+                                highScoreManager.saveHighScore(
+                                    HighScoreManager.NUMBER_HIGH,
+                                    score
+                                )
+                                onWin()
+                            }
+                        } else {
+                            nextQuestion()
+                        }
                     } else {
                         onLose()
                     }
                 },
-                modifier = Modifier.fillMaxWidth(0.7f).padding(6.dp)
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .padding(6.dp)
             ) {
                 Text(option.toString(), fontSize = 20.sp)
             }
         }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

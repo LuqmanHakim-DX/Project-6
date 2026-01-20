@@ -23,6 +23,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import android.app.Activity
+import com.example.funkidslearnsapp.data.HighScoreManager
 import com.example.funkidslearnsapp.screens.NumberQuizScreen
 import com.example.funkidslearnsapp.screens.ColorGameScreen
 import com.example.funkidslearnsapp.screens.LetterGameScreen
@@ -35,9 +36,6 @@ fun FunLearnApp() {
     val context = LocalContext.current
     var showExitDialog by remember { mutableStateOf(false) }
 
-    BackHandler {
-        showExitDialog = true
-    }
 
     NavHost(
         navController = navController,
@@ -53,6 +51,11 @@ fun FunLearnApp() {
         }
 
         composable(Routes.GameMenu) {
+
+            BackHandler {
+                showExitDialog = true
+            }
+
             GameMenuScreen(
                 onStartGame = { route ->
                     navController.navigate(route)
@@ -67,16 +70,16 @@ fun FunLearnApp() {
         // 🔤 LETTER GAME
         composable(Routes.LETTER_GAME) {
             LetterGameScreen(
-                onWin = { navController.navigate(Routes.Win) },
+                onWin = { navController.navigate("win/letter") },
                 onLose = { navController.navigate(Routes.Lose) },
                 onPause = { navController.navigate(Routes.Pause) }
             )
         }
 
-        // 🎨 COLOR GAME
+        // 🎨 COLOR GAME (LOSE ONLY)
         composable(Routes.COLOR_GAME) {
             ColorGameScreen(
-                onWin = { navController.navigate(Routes.Win) },
+                onWin = { navController.navigate("win/color") },
                 onLose = { navController.navigate(Routes.Lose) },
                 onPause = { navController.navigate(Routes.Pause) }
             )
@@ -85,16 +88,33 @@ fun FunLearnApp() {
         // 🔢 NUMBER GAME
         composable(Routes.NumberQuiz) {
             NumberQuizScreen(
-                onWin = { navController.navigate(Routes.Win) },
+                onWin = { navController.navigate("win/number") },
                 onLose = { navController.navigate(Routes.Lose) },
                 onPause = { navController.navigate(Routes.Pause) }
             )
         }
 
-        composable(Routes.Win) {
-            WinScreen {
-                navController.popBackStack(Routes.GameMenu, false)
+        // 🏆 WIN SCREEN WITH SCORE KEY
+        composable(
+            route = "win/{game}",
+            arguments = listOf(navArgument("game") { type = NavType.StringType })
+        ) { backStackEntry ->
+
+            val game = backStackEntry.arguments?.getString("game") ?: "letter"
+
+            val key = when (game) {
+                "letter" -> HighScoreManager.LETTER_HIGH
+                "number" -> HighScoreManager.NUMBER_HIGH
+                "color" -> HighScoreManager.COLOR_HIGH
+                else -> HighScoreManager.LETTER_HIGH
             }
+
+            WinScreen(
+                gameKey = key,
+                onBackToMenu = {
+                    navController.popBackStack(Routes.GameMenu, false)
+                }
+            )
         }
 
         composable(Routes.Lose) {

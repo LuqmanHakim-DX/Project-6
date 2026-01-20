@@ -7,14 +7,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.funkidslearnsapp.data.HighScoreManager
 import com.example.funkidslearnsapp.game.LetterGameData
 import com.example.funkidslearnsapp.game.generateLetterOptions
 import com.example.funkidslearnsapp.game.maskedWord
 import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun LetterGameScreen(
@@ -22,17 +25,25 @@ fun LetterGameScreen(
     onLose: () -> Unit,
     onPause: () -> Unit
 ) {
+    val context = LocalContext.current
+    val highScoreManager = remember { HighScoreManager(context) }
+    val scope = rememberCoroutineScope() // ✅ CORRECT
+
     val games = remember { LetterGameData.games.shuffled() }
+    if (games.isEmpty()) return
 
     var currentIndex by remember { mutableStateOf(0) }
     var score by remember { mutableStateOf(0) }
+    var locked by remember { mutableStateOf(false) }
 
     val game = games[currentIndex]
     val correctLetter = game.word[game.missingIndex]
     val options = remember(game) { generateLetterOptions(correctLetter) }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -65,15 +76,32 @@ fun LetterGameScreen(
                 row.forEach { letter ->
                     Button(
                         onClick = {
+                            if (locked) return@Button
+                            locked = true
+
                             if (letter == correctLetter) {
                                 score++
-                                if (currentIndex == games.lastIndex) onWin()
-                                else currentIndex++
+
+                                if (currentIndex == games.lastIndex) {
+                                    // 🏆 SAVE HIGH SCORE (CORRECT WAY)
+                                    scope.launch {
+                                        highScoreManager.saveHighScore(
+                                            HighScoreManager.LETTER_HIGH,
+                                            score
+                                        )
+                                        onWin()
+                                    }
+                                } else {
+                                    currentIndex++
+                                    locked = false
+                                }
                             } else {
                                 onLose()
                             }
                         },
-                        modifier = Modifier.padding(8.dp).size(80.dp)
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(80.dp)
                     ) {
                         Text(letter.toString(), fontSize = 24.sp)
                     }
@@ -82,6 +110,8 @@ fun LetterGameScreen(
         }
     }
 }
+
+
 
 
 @Preview(showBackground = true)

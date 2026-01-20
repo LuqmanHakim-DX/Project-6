@@ -50,7 +50,7 @@ fun GameMenuScreen(
             Spacer(Modifier.height(40.dp))
 
             Button(
-                onClick = { onStartGame("letters") },
+                onClick = { onStartGame(Routes.LETTER_GAME) },
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -62,7 +62,7 @@ fun GameMenuScreen(
             Spacer(Modifier.height(20.dp))
 
             Button(
-                onClick = { onStartGame("numbers") },
+                onClick = { onStartGame(Routes.NumberQuiz) },
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,7 +74,7 @@ fun GameMenuScreen(
             Spacer(Modifier.height(20.dp))
 
             Button(
-                onClick = { onStartGame("colors") },
+                onClick = { onStartGame(Routes.COLOR_GAME) },
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .fillMaxWidth()
