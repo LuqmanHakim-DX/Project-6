@@ -1,19 +1,20 @@
 package com.example.funkidslearnsapp.screens
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.funkidslearnsapp.R
 import com.example.funkidslearnsapp.Routes
 import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 
@@ -25,12 +26,13 @@ fun GameMenuScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFFFFF9C4), Color(0xFFB3E5FC))
-                )
-            )
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.gamemenuscreen),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
         Column(
             modifier = Modifier
@@ -43,8 +45,7 @@ fun GameMenuScreen(
             Text(
                 text = "GAME MENU",
                 fontSize = 32.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color(0xFF0288D1)
+                fontWeight = FontWeight.ExtraBold
             )
 
             Spacer(Modifier.height(40.dp))

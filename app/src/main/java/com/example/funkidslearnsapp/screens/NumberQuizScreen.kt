@@ -1,14 +1,21 @@
 package com.example.funkidslearnsapp.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.funkidslearnsapp.R
 import com.example.funkidslearnsapp.data.HighScoreManager
 import com.example.funkidslearnsapp.ui.theme.FunKidsLearnsAppTheme
 import kotlinx.coroutines.launch
@@ -17,7 +24,7 @@ import kotlin.random.Random
 @Composable
 fun NumberQuizScreen(
     onWin: (score: Int) -> Unit,
-    onLose: () -> Unit,
+    onLose: (score: Int) -> Unit,
     onPause: () -> Unit
 ) {
     val context = LocalContext.current
@@ -49,50 +56,70 @@ fun NumberQuizScreen(
         locked = false
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.numberquizscreen),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-        // 🔢 SCORE + PAUSE
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("Score: $score", fontSize = 20.sp)
-            Button(onClick = onPause) { Text("PAUSE") }
-        }
 
-        Spacer(Modifier.height(24.dp))
-
-        Text("$a + $b = ?", fontSize = 40.sp)
-
-        Spacer(Modifier.height(32.dp))
-
-        options.forEach { option ->
-            Button(
-                onClick = {
-                    if (locked) return@Button
-                    locked = true
-
-                    if (option == answer) {
-                        score++
-
-                        if (questionCount == 9) {
-                            onWin(score)
-                        } else {
-                            nextQuestion()
-                        }
-                    } else {
-                        onLose()
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .padding(6.dp)
+            // 🔢 SCORE + PAUSE
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(option.toString(), fontSize = 20.sp)
+                Surface(
+                    color = Color.White.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Score: $score", fontSize = 20.sp, modifier = Modifier.padding(8.dp))
+                }
+                Button(onClick = onPause) { Text("PAUSE") }
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            Surface(
+                color = Color.White.copy(alpha = 0.5f),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("$a + $b = ?", fontSize = 40.sp, modifier = Modifier.padding(8.dp))
+            }
+
+            Spacer(Modifier.height(32.dp))
+
+            options.forEach { option ->
+                Button(
+                    onClick = {
+                        if (locked) return@Button
+                        locked = true
+
+                        if (option == answer) {
+                            score++
+
+                            if (questionCount == 9) {
+                                onWin(score)
+                            } else {
+                                nextQuestion()
+                            }
+                        } else {
+                            onLose(score)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.7f)
+                        .padding(6.dp)
+                ) {
+                    Text(option.toString(), fontSize = 20.sp)
+                }
             }
         }
     }
